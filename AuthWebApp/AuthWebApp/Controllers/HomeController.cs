@@ -22,10 +22,13 @@ namespace AuthWebApp.Controllers
         {
             return View();
         }
+
+        //ahmad081177 - start
         public IActionResult AccessDenied()
         {
             return View();
         }
+        //ahmad081177 - end
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

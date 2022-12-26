@@ -2,8 +2,13 @@
 
 namespace AuthWebApp.Misc
 {
-    public class Utils
+    public static class Utils
     {
+        public static string ControllerName(this string controllerName)
+        {
+            return controllerName.Substring(0, controllerName.LastIndexOf("Controller"));
+        }
+
         public static string Hash(string str)
         {
             return Convert.ToBase64String(

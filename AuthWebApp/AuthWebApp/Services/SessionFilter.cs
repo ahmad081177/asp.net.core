@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Policy;
 using AuthWebApp.Misc;
+using AuthWebApp.Controllers;
 
 public class SessionFilter : Attribute, IActionFilter
 {
@@ -12,7 +13,7 @@ public class SessionFilter : Attribute, IActionFilter
         var result = context.HttpContext.Session.GetString(Constants.SESSION_APP_USER_EMAIL);
         if (result == null)
         {
-            context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
+            context.Result = new RedirectToActionResult("AccessDenied", nameof(HomeController).ControllerName(), null);
         }
     }
     public void OnActionExecuted(ActionExecutedContext context)

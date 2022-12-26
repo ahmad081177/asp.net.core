@@ -38,7 +38,7 @@ namespace AuthWebApp.Controllers
                     context.Users.Add(model);
                     context.SaveChanges();
                     //TODO
-                    return RedirectToAction("Login", "Auth");
+                    return RedirectToAction(nameof(Login));
                 }
             }
             else
@@ -67,7 +67,7 @@ namespace AuthWebApp.Controllers
                 HttpContext.Session.SetString(Constants.SESSION_APP_USER_EMAIL, user.Email);
                 HttpContext.Session.SetString(Constants.SESSION_APP_USER_NAME, user.Name + " " + user.LastName);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", nameof(HomeController).ControllerName());
             }
             else
             {
@@ -78,7 +78,7 @@ namespace AuthWebApp.Controllers
         {
             HttpContext.Session.Remove(Constants.SESSION_APP_USER_EMAIL);
             HttpContext.Session.Remove(Constants.SESSION_APP_USER_NAME);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", nameof(HomeController).ControllerName());
         }
 
     }
