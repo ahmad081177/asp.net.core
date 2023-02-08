@@ -15,6 +15,6 @@ This project is built in VS 2022, using .NET Core 6.0
   - Microsoft.EntityFrameworkCore.Tools
   - Microsoft.VisualStudio.Web.CodeGeneration.Design
 - Create App_Data folder under the main project
-- Open Package Console Manager nad type the folloing:
+- Open Package Console Manager nad type the following:
   - Add-Migration init
   - Update-Database
