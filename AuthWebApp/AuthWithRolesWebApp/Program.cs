@@ -1,3 +1,4 @@
+using AuthWithRolesWebApp.Context;
 using AuthWithRolesWebApp.Models;
 using AuthWithRolesWebApp.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 
 builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<AppState>();
 //ahmad081177 - end
 
 var app = builder.Build();
