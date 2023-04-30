@@ -45,7 +45,5 @@ namespace AuthWithRolesWebApp.Models
         public string? Phone { get; set; }
 
         public ICollection<AppUserRole> UserRoles { get; set; }
-
-        
     }
 }

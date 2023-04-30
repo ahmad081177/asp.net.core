@@ -13,6 +13,7 @@ namespace AuthWithRolesWebApp.Services
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class UserRoleFilter : Attribute, IActionFilter
     {
+        //The role to check with
         public string Role { get; private set; }
 
         public UserRoleFilter(string role)
@@ -26,12 +27,16 @@ namespace AuthWithRolesWebApp.Services
             var userEmail = context.HttpContext.Session.GetString(Constants.SESSION_APP_USER_EMAIL);
             if (!string.IsNullOrWhiteSpace(userEmail))
             {
+                //Try to take the DBContext from the controller thru IDBContextFilterSupport 
                 if ((context.Controller) is IDBContextFilterSupport dbContext)
                 {
+                    //Check current user
                     var user = dbContext.AuthDbContext.Users.Where(u => u.Email == userEmail).FirstOrDefault();
+                    //get current user's role
                     var role = dbContext.AuthDbContext.Roles.Where(r=>r.Name==Role.ToLower()).FirstOrDefault();
                     if (user != null && role != null)
                     {
+                        //If user has the specified role
                         var temp = dbContext.AuthDbContext.UserRoles.Where(u => u.UserId == user.Id && u.RoleId == role.Id).FirstOrDefault();
                         if(temp!=null)
                         {
