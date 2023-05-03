@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "fullcalendar@6.1.6",
+      "destination": "wwwroot/lib/fullcalendar/"
+    }
+  ]
+}
