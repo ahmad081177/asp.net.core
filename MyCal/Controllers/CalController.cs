@@ -13,42 +13,27 @@ namespace MyCal.Controllers
         {
             this.dbContext = dbContext;
         }
-        public IActionResult TeacherCal()
+        public async Task<IActionResult> TeacherCal()
         {
-            string sid = HttpContext.Session.GetString("userid");
-            if (string.IsNullOrEmpty(sid))
+            string? sid = HttpContext.Session.GetString("userid");
+            var success = int.TryParse(sid, out int uid);
+            if (!success)
             {
-                return BadRequest();
+                return BadRequest("Invalid teacher id format");
             }
-            int uid = int.Parse(sid);
-            var teacher = dbContext.AppTeachers.Where(t => t.Id == uid).FirstOrDefault();
-            if(teacher == null)
-            {
-                return BadRequest();
-            }
-            dbContext.Appointments.ToList(); //load all
-            var students = dbContext.AppUsers.ToList();
-            //get my students
-            var mystudents = new List<AppUser>();
-            foreach(var s in students)
-            {
-                if(s.AppTeacherId == teacher.Id)
-                {
-                    mystudents.Add(s);
-                }
-            }
+            _ = await dbContext.Appointments.ToListAsync(); //load all
+
+            var mystudents = await dbContext.AppUsers.Where(s => s.AppTeacherId == uid).ToListAsync();
 
             return View(mystudents);
         }
         public IActionResult UserCal()
         {
-            string sid = HttpContext.Session.GetString("userid");
-            if(string.IsNullOrEmpty(sid))
-            {
-                return BadRequest();
-            }
-            int uid = int.Parse(sid);
-            dbContext.Appointments.ToList(); //load them
+            string? sid = HttpContext.Session.GetString("userid");
+            bool f = int.TryParse(sid, out int uid);
+            if (!f)
+                return BadRequest("Invalid user ID format");
+            _ = dbContext.Appointments.ToList(); //load them
             var user = dbContext.AppUsers.Find(uid);
 
             return View(user);
@@ -58,7 +43,7 @@ namespace MyCal.Controllers
         {
             //Add to DB
             var datetime = DateTime.Parse(dt);
-            string uid = HttpContext.Session.GetString("userid");
+            string? uid = HttpContext.Session.GetString("userid");
             if (int.TryParse(uid, out int id))
             {
                 var user = await dbContext.AppUsers.Where(u => u.Id == id).FirstOrDefaultAsync();
