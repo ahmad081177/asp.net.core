@@ -15,7 +15,30 @@ namespace MyCal.Controllers
         }
         public IActionResult TeacherCal()
         {
-            return View();
+            string sid = HttpContext.Session.GetString("userid");
+            if (string.IsNullOrEmpty(sid))
+            {
+                return BadRequest();
+            }
+            int uid = int.Parse(sid);
+            var teacher = dbContext.AppTeachers.Where(t => t.Id == uid).FirstOrDefault();
+            if(teacher == null)
+            {
+                return BadRequest();
+            }
+            dbContext.Appointments.ToList(); //load all
+            var students = dbContext.AppUsers.ToList();
+            //get my students
+            var mystudents = new List<AppUser>();
+            foreach(var s in students)
+            {
+                if(s.AppTeacherId == teacher.Id)
+                {
+                    mystudents.Add(s);
+                }
+            }
+
+            return View(mystudents);
         }
         public IActionResult UserCal()
         {

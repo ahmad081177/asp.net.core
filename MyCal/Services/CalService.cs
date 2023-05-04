@@ -24,6 +24,7 @@ namespace MyCal.Services
             }
             else
             {
+                //TODO - what if the Appointments is not loaded?
                 return user.Appointments;
             }
         }

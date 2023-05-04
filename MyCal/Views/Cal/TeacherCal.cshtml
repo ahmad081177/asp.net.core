@@ -1,4 +1,6 @@
-﻿<div></div>
+﻿@model IEnumerable<AppUser>
+
+<div></div>
 <div id='calendar'></div>
 
 @section Scripts
@@ -18,33 +20,34 @@
                 minute: "2-digit",
                 timeZoneName: "short"
             },
-            dateClick: async function (info) {
-                let uri = '/Cal/SetupMeeting';
-                try {
-                    const response = await fetch(uri, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(info.dateStr)
-                    });
-                    const jsonData = await response.json(); //string
-                    const data = JSON.parse(jsonData);
-                    console.log(data);
-                    addMeetingEvent("Event#" + data.id, data.start, data.end)
+            //dateClick: async function (info) {
+            //    let uri = '/Cal/SetupMeeting';
+            //    try {
+            //        const response = await fetch(uri, {
+            //            method: 'POST',
+            //            headers: {
+            //                'Accept': 'application/json',
+            //                'Content-Type': 'application/json'
+            //            },
+            //            body: JSON.stringify(info.dateStr)
+            //        });
+            //        const jsonData = await response.json(); //string
+            //        const data = JSON.parse(jsonData);
+            //        console.log(data);
+            //        addMeetingEvent("Event#" + data.id, data.start, data.end)
 
-                }
-                catch (err) {
-                    console.error('Unable to update item.', error);
-                    alert(error);
-                }
-            },
+            //    }
+            //    catch (err) {
+            //        console.error('Unable to update item.', error);
+            //        alert(error);
+            //    }
+            //},
             select: function (info) {
                 alert('selected ' + info.startStr + ' to ' + info.endStr);
             }
         });
 
+        addAllEvents(); //TODO add it once calendar is loaded
         calendar.render();
 
         function addMeetingEvent(title, start, end) {
@@ -54,6 +57,24 @@
                 calendar.addEvent({ title: title, start: sdate, end: edate });
             } else {
                 console.error("Invalid dates: " + start + " OR " + end)
+            }
+        }
+        function addAllEvents(){
+
+            //add events
+            var users = JSON.parse('@Json.Serialize(@Model)');
+            let events = [];
+            if (users) {
+                for (let i = 0; i < users.length; i++) {
+                    const p = users[i];
+                    //events.push({title:"id#"+p.id, start: p.start, end:p.end});
+                    if (p.appointments) {
+                        for (let j = 0; j < p.appointments.length; j++) {
+                            const ap = p.appointments[j];
+                            addMeetingEvent(p.name + "#" + ap.id, ap.start, ap.end);
+                        }
+                    }
+                }
             }
         }
     </script>
