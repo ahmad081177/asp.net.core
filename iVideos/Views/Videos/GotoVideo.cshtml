@@ -1,0 +1,70 @@
+﻿@model iVideos.Models.Video
+
+@{
+    ViewData["Title"] = "GotoVideo";
+}
+
+<h1>@Model.Title</h1>
+
+<div>
+    <h4>Video - @Html.DisplayFor(model => model.Description)</h4>
+
+    <hr />
+    <dl class="row">
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Subject)
+        </dd>
+
+    </dl>
+    <video id='vid' vid="@Model.Id" controls="controls" width="500" height="400">
+        <source src="~/@Model.Path" />
+    </video>
+
+</div>
+
+@section scripts
+    {
+    <script>
+        let v = document.getElementById('vid')
+        let currentTime = v.currentTime; //at this stage this is 0
+        let duration = v.duration; //at this stage, this is undefined
+        //update local variables
+        v.ontimeupdate = (e) => {
+            currentTime = Math.max(v.currentTime, currentTime);
+            duration = v.duration;
+        };
+        //register for each 5 seconds to update server
+        const updateInterval = setInterval(updateServer, 5000); //update each 5 sec
+
+        function updateServer() {
+            //send data to the server! every 5 secs
+            $.ajax({
+                method: 'post',
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded',
+                url: '/Videos/UpdateVidoeInfo',
+                data: { vid: v.vid, duration: v.duration, currentTime: currentTime },
+                success: (d) => {
+                    console.log(d);
+                }
+            });
+        }
+
+    </script>
+}
