@@ -12,7 +12,7 @@ nupkg/
 .idea/
 
 # Visual Studio
-#.vs/
+.vs/
 
 # Fleet
 .fleet/
